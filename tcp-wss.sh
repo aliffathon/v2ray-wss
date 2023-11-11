@@ -7,7 +7,7 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-timedatectl set-timezone Asia/Shanghai
+timedatectl set-timezone Asia/Jakarta
 v2path=$(cat /dev/urandom | head -1 | md5sum | head -c 6)
 v2uuid=$(cat /proc/sys/kernel/random/uuid)
 ssport=$(shuf -i 2000-65000 -n 1)
@@ -22,10 +22,10 @@ getIP(){
 }
 
 install_precheck(){
-    echo "====输入已经DNS解析好的域名===="
+    echo "====Masukkan Nama Domain yg sudah terdaftar di DNS===="
     read domain
 
-    read -t 15 -p "回车或等待15秒为默认端口443，或者自定义端口请输入(1-65535)："  getPort
+    read -t 15 -p "Tekan Enter, atau tunggu 15 detik untuk menggunakan port default 443，atau gunakan port custom (1-65535)："  getPort
     if [ -z $getPort ];then
         getPort=443
     fi
@@ -44,9 +44,9 @@ install_precheck(){
     if [ "$isPort" != "" ];then
         clear
         echo " ================================================== "
-        echo " 80或443端口被占用，请先释放端口再运行此脚本"
+        echo " Port 80 dan 443 sudah terpakai, gunakan port lain untuk menjalankan script ini"
         echo
-        echo " 端口占用信息如下："
+        echo " Port terpakai sbb："
         echo $isPort
         echo " ================================================== "
         exit 1
@@ -151,16 +151,16 @@ EOF
 
 cat >/usr/local/etc/v2ray/client.json<<EOF
 {
-===========配置参数=============
-协议：VMess
-地址：${domain}
-端口：${getPort}
+===========Configuration Parameters=============
+Protocol：VMess
+Domain：${domain}
+Port：${getPort}
 UUID：${v2uuid}
-加密方式：aes-128-gcm
-传输协议：ws
-路径：/${v2path}
-底层传输：tls
-注意：8080是免流端口不需要打开tls
+Encryption：aes-128-gcm
+Transfer Protocol：ws
+Path：/${v2path}
+underlying transport：tls
+Note: port 8080 adl flow-free tanpa perlu menggunakan TLS
 }
 EOF
 
@@ -221,18 +221,18 @@ client_v2ray(){
     wslink=$(echo -n "{\"port\":${getPort},\"ps\":\"1024-wss\",\"tls\":\"tls\",\"id\":\"${v2uuid}\",\"aid\":0,\"v\":2,\"host\":\"${domain}\",\"type\":\"none\",\"path\":\"/${v2path}\",\"net\":\"ws\",\"add\":\"${domain}\",\"allowInsecure\":0,\"method\":\"none\",\"peer\":\"${domain}\",\"sni\":\"${domain}\"}" | base64 -w 0)
 
     echo
-    echo "安装已经完成"
+    echo "Instalasi selesai"
     echo
-    echo "===========v2ray配置参数============"
-    echo "协议：VMess"
-    echo "地址：${domain}"
-    echo "端口：${getPort}"
+    echo "===========v2ray config params============"
+    echo "Type：VMess"
+    echo "Domain：${domain}"
+    echo "Port：${getPort}"
     echo "UUID：${v2uuid}"
-    echo "加密方式：aes-128-gcm"
-    echo "传输协议：ws"
-    echo "路径：/${v2path}"
-    echo "底层传输：tls"
-    echo "注意：8080是免流端口不需要打开tls"
+    echo "Encryption：aes-128-gcm"
+    echo "Transport Proto：ws"
+    echo "Path：/${v2path}"
+    echo "Underlying：tls"
+    echo "Note: port 8080 adl flow-free port tanpa perlu TLS"
     echo "===================================="
     echo "vmess://${wslink}"
     echo
@@ -242,14 +242,14 @@ client_sslibev(){
     sslink=$(echo -n "chacha20-ietf-poly1305:${v2uuid}@$(getIP):${ssport}" | base64 -w 0)
 
     echo
-    echo "安装已经完成"
+    echo "Instalasi Selesai"
     echo
-    echo "===========Shadowsocks配置参数============"
-    echo "地址：$(getIP)"
-    echo "端口：${ssport}"
-    echo "密码：${v2uuid}"
-    echo "加密方式：chacha20-ietf-poly1305"
-    echo "传输协议：tcp"
+    echo "===========Shadowsocks==================="
+    echo "IP：$(getIP)"
+    echo "Port：${ssport}"
+    echo "UUID：${v2uuid}"
+    echo "Encryption：chacha20-ietf-poly1305"
+    echo "Protocol：tcp"
     echo "========================================="
     echo "ss://${sslink}"
     echo
@@ -263,12 +263,12 @@ start_menu(){
     echo " 系统：Ubuntu、Debian、CentOS                        "
     echo " ================================================== "
     echo
-    echo " 1. 安装 Shadowsocks-libev"
-    echo " 2. 安装 v2ray+ws+tls"
-    echo " 3. 安装 Reality"
-    echo " 0. 退出脚本"
+    echo " 1. Install Shadowsocks-libev"
+    echo " 2. Install v2ray+ws+tls"
+    echo " 3. Install Reality"
+    echo " 0. Exit"
     echo
-    read -p "请输入数字:" num
+    read -p "Pilihan:" num
     case "$num" in
     1)
     install_sslibev
@@ -289,7 +289,7 @@ start_menu(){
     ;;
     *)
     clear
-    echo "请输入正确数字"
+    echo "Masukan angka dg benar"
     sleep 2s
     start_menu
     ;;
