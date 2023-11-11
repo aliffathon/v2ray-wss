@@ -10,7 +10,7 @@ fi
 timedatectl set-timezone Asia/Shanghai
 v2uuid=$(cat /proc/sys/kernel/random/uuid)
 
-read -t 15 -p "回车或等待15秒为默认端口443，或者自定义端口请输入(1-65535)："  getPort
+read -t 15 -p "Masukkkan port atau tunggu 15 detik untuk menggunakan port default 443，Port number(1-65535)："  getPort
 if [ -z $getPort ];then
     getPort=443
 fi
@@ -99,15 +99,15 @@ EOF
 
 cat >/usr/local/etc/xray/reclient.json<<EOF
 {
-===========配置参数=============
-代理模式：vless
-地址：$(getIP)
-端口：${getPort}
+===========Configuration============
+Type：vless
+IP：$(getIP)
+Port：${getPort}
 UUID：${v2uuid}
-流控：xtls-rprx-vision
-传输协议：tcp
+Flow：xtls-rprx-vision
+Protocol：tcp
 Public key：${rePublicKey}
-底层传输：reality
+Transport：reality
 SNI: www.amazon.com
 shortIds: 88
 ====================================
@@ -121,17 +121,17 @@ EOF
 
 client_re(){
     echo
-    echo "安装已经完成"
+    echo "Installed"
     echo
-    echo "===========reality配置参数============"
-    echo "代理模式：vless"
-    echo "地址：$(getIP)"
-    echo "端口：${getPort}"
+    echo "===========reality config==========="
+    echo "Type：vless"
+    echo "IP：$(getIP)"
+    echo "Port：${getPort}"
     echo "UUID：${v2uuid}"
-    echo "流控：xtls-rprx-vision"
-    echo "传输协议：tcp"
+    echo "Flow：xtls-rprx-vision"
+    echo "Protocol：tcp"
     echo "Public key：${rePublicKey}"
-    echo "底层传输：reality"
+    echo "Transport：reality"
     echo "SNI: www.amazon.com"
     echo "shortIds: 88"
     echo "===================================="
